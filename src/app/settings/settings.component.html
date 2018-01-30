@@ -1,0 +1,19 @@
+<ul>
+  <div style="text-align:center">
+    <h1>Happy English</h1>
+    <h2>Private cabinet</h2>
+  </div>
+  <div style="font-size: 120%">
+    <div style="text-align:center">Login: {{this.loginSettings}}</div>
+    <br>
+    <div style="text-align:center">First Name:  {{this.firstName}}</div>
+    <br>
+    <div style="text-align:center">Last Name: {{this.lastName}}</div>
+    <br>
+    <div style="text-align:center">
+          <button type="button" class="btn btn-outline-dark" (click)="updateUser()">Change personal data</button>
+      <br><br>
+          <button type="button" class="btn btn-outline-dark" (click)="changePassword()"> Change password</button>
+    </div>
+  </div>
+</ul>

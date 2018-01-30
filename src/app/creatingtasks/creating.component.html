@@ -1,0 +1,73 @@
+<ul>
+  <div class="w3-container"  style="margin-left: 20%" >
+    <div style="margin-right: 30%">
+      <select class="w3-select" [(ngModel)] = "taskMode">
+        <option [ngValue]="0" [selected] = "0">basic task creator</option>
+        <option [ngValue]="1">advanced task creator</option>
+        <option [ngValue]="2">video</option>
+        <option [ngValue]="3">question task creater</option>
+        <option [ngValue]="4">question task view</option>
+      </select>
+    </div>
+    <div *ngIf="taskMode === 0" style="margin-right: 30%">
+      <div class="w3-bar">
+        <input class="w3-input w3-border w3-bar-item" type="text" style="width: 40%"
+               placeholder="Word" [(ngModel)]="word">
+        <input class="w3-input w3-border w3-bar-item" type="text" style="width: 40%"
+               placeholder="Translation" [(ngModel)]="translation">
+        <button class="w3-button w3-bar-item w3-teal" style="width: 8%" (click)="addWord()">Add</button>
+        <button class="w3-button w3-right w3-green" style="width: 10%" (click)="submit()">Submit</button>
+      </div>
+      <div class="list-group">
+        <ul id="grouplist" class="list-group">
+            <span class="list-group-item" style="width: 80%" *ngFor="let card of basicTaskArray; let i = index">
+              <div class="row">
+                <div class="w3-col s6 w3-center">{{card.word}}</div>
+                <div class="w3-col s6 w3-center">{{card.translation}}
+                  <span class="w3-button w3-transparent w3-display-right" (click)="removeWord(i)">&times;</span></div>
+              </div>
+            </span>
+        </ul>
+      </div>
+    </div>
+    <div *ngIf="taskMode === 1" style="margin-right: 30%">
+      <div class="w3-bar">
+        <input class="w3-input w3-border w3-bar-item" type="text" style="width: 40%"
+               placeholder="Word" [(ngModel)]="word">
+        <input class="w3-input w3-border w3-bar-item" type="text" style="width: 40%"
+               placeholder="Translation" [(ngModel)]="translation">
+        <input class="w3-input w3-border w3-bar-item" type="text" style="width: 40%;"
+               placeholder="Translation" [(ngModel)]="translation1">
+        <input class="w3-input w3-border w3-bar-item" type="text" style="width: 40%;"
+               placeholder="Translation" [(ngModel)]="translation2">
+        <input class="w3-input w3-border w3-bar-item" type="text" style="width: 40%;"
+               placeholder="Translation" [(ngModel)]="translation3">
+        <button class="w3-button w3-bar-item w3-teal" style="width: 8%" (click)="addWord()">Add</button>
+        <button class="w3-button w3-right w3-green" style="width: 10%" (click)="submit()">Submit</button>
+      </div>
+      <div class="list-group">
+        <ul id="grouplist" class="list-group">
+            <span class="list-group-item" style="width: 80%" *ngFor="let card of advancedTaskArray; let i = index">
+              <span class="row" *ngFor="let t of card.translations; let j = index">
+                <div class="w3-col s6 w3-center" *ngIf="j == 0; else elseBlock">{{card.word}}</div>
+                <ng-template #elseBlock>
+                  <div class="w3-col s6 w3-center">---</div></ng-template>
+                <div class="w3-col s6 w3-center">{{t}}
+                  <span class="w3-button w3-transparent w3-display-right" (click)="removeWord(i)">&times;</span></div>
+              </span>
+            </span>
+        </ul>
+      </div>
+    </div>
+    <div *ngIf="taskMode === 2" style="margin-right: 30%">
+        <iframe width="420" height="315" src="https://www.youtube.com/embed/1V3ZY_TXKwU"></iframe>
+    </div>
+    <div *ngIf="taskMode === 3" style="margin-right: 30%">
+      <app-creating-questions></app-creating-questions>
+    </div>
+    <div *ngIf="taskMode === 4" style="margin-right: 30%">
+      <app-question-component [id]="2"></app-question-component>
+    </div>
+  </div>
+
+</ul>

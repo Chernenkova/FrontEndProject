@@ -1,0 +1,55 @@
+<ul>
+  <div *ngIf="loginIn; else unset2" style="text-align:center">
+
+  </div>
+
+  <ng-template #unset2>
+    <div *ngIf="true;else unset">
+      <div style="text-align:center">
+        <h1>Happy English</h1>
+        <h2>Welcome!</h2>
+        <h3>Please, sign in:</h3>
+      </div>
+      <div *ngIf="error" style="text-align:center">
+        Error! Please, try again!
+      </div>
+      <div class="form-group"  style="margin-left: 41%">
+        <label for="email"  style="margin-left: 13%">Login</label>
+        <input type="email" class="form-control" id="email" style="width: 30%" placeholder="Please, enter login" [(ngModel)]="login" #email="ngModel"
+               required pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}">
+      </div>
+      <div class="form-group"  style="margin-left: 41%">
+        <label for="pass"   style="margin-left: 12%">Password</label>
+        <input type="password" class="form-control" id="pass" style="width: 30%" placeholder="Please, enter password" [(ngModel)]="password"
+               required pattern="[0-9a-zA-Z]{6,}" (error)="123">
+      </div>
+      <button type="submit" class="btn btn-success" (click)="signIn()" style="margin-left: 47.5%">Sign in</button>
+    </div>
+    <ng-template #unset>
+      <div>
+        <div style="text-align:center">
+          <h1>Happy English</h1>
+          <h2>Welcome!</h2>
+          <h3>Please, sign up:</h3>
+        </div>
+        <div *ngIf="error" style="text-align:center">
+          Error! Please, try again!
+        </div>
+        <div class="form-group" style="margin-left: 41%">
+          <label for="email"  style="margin-left: 13%">Login</label>
+          <input type="email" class="form-control" id="email" style="width: 30%" placeholder="Please, enter login" [(ngModel)]="login" #email="ngModel"
+                 required pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}">
+        </div>
+        <div class="form-group" style="margin-left: 41%">
+          <label for="pass"  style="margin-left: 12%">Password</label>
+          <input type="password" class="form-control" id="pass" style="width: 30%" placeholder="Please, enter password" [(ngModel)]="password" required pattern="[0-9a-zA-Z]{6,}">
+        </div>
+        <div class="form-group" style="margin-left: 41%">
+          <label for="pass"  style="margin-left: 9.5%">Repeat password</label>
+          <input type="password" class="form-control" id="pass" style="width: 30%" placeholder="Please, repeat your password" [(ngModel)]="passwordRepeat" required pattern="[0-9a-zA-Z]{6,}">
+        </div>
+        <button type="submit" class="btn btn-success" (click)="signUp()"  style="margin-left: 47.5%">Sign up</button>
+      </div>
+    </ng-template>
+  </ng-template>
+</ul>

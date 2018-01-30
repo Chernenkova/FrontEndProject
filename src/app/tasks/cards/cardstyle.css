@@ -1,0 +1,40 @@
+.center {
+  text-align: center;
+}
+
+.my-panel {
+  width: 500px;
+  background: #ffffff;
+}
+
+.my-text{
+  font-size: 18px;
+}
+
+.my-button {
+  text-align: center;
+  width: 100%;
+  margin: 1px;
+  background: #ebff4d;
+  outline: hidden;
+}
+
+.my-nextprev {
+  margin: 1px;
+  background: seagreen;
+  color: white;
+}
+
+.list-group-item.active {
+  background-color: #ffc12b !important;
+  border-color: #ffc12b;
+}
+.list-group-item.success {
+  background-color: #34d849 !important;
+  border-color: #34d849;
+}
+.list-group-item.fail {
+  background-color: #d82636 !important;
+  border-color: #d82636;
+}
+
