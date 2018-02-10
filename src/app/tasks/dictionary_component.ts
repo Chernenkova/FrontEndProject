@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSort, MatTabl
 import {SelectionModel} from '@angular/cdk/collections';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-dictionary',
@@ -58,7 +59,7 @@ import {DOCUMENT} from '@angular/common';
           </mat-table>
           <div class="w3-row">
             <div class="w3-col l3 m3" style="margin-top: 7px; padding-left: 5%">
-              <button mat-button="" class="w3-teal" [disabled]="this.selection.isEmpty()">Learn chosen words</button>
+              <button mat-button="" class="w3-teal" [disabled]="this.selection.isEmpty()" (click)="learnWords()">Learn chosen words</button>
             </div>
             <div class="w3-col l3 m3" style="margin-top: 7px;">
               <button mat-button="" class="" [disabled]="this.selection.isEmpty()" (click)="openDialog()">
@@ -104,14 +105,15 @@ export class DictionaryComponent implements OnInit, AfterViewInit {
   selection = new SelectionModel<Card>(true, []);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor(private http: HttpClient, public dialog: MatDialog, @Inject(DOCUMENT) private document: any) {}
+  constructor(private http: HttpClient, public dialog: MatDialog, @Inject(DOCUMENT) private document: any, private router: Router) {}
 
   ngAfterViewInit() {
     // this.dataSource.paginator = this.paginator;
   }
   ngOnInit(): void {
     if(localStorage.getItem('token') === null)
-      this.document.location.href = '';
+      // this.document.location.href = '';
+      this.router.navigate([''])
     let httpOptions = {};
     if (localStorage.getItem('token') != null) {
       httpOptions = {
@@ -177,6 +179,10 @@ export class DictionaryComponent implements OnInit, AfterViewInit {
         this.deleteWords();
       }
     });
+  }
+  learnWords(): void {
+    localStorage.setItem('dictionary', JSON.stringify(this.selection.selected));
+    this.router.navigate(['/learn-writing/dictionary']);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

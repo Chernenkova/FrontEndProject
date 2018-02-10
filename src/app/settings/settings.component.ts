@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-settings',
@@ -12,27 +13,39 @@ export class SettingsComponent implements OnInit {
   firstName: string = null;
   lastName: string = null;
   id: string = null;
-  GET_URL = 'http://localhost:8080/welcome/getUser';
+  GET_URL = 'http://localhost:8080/welcome/getUserData';
 
-  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any) {}
+  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any, private router: Router) {}
   ngOnInit(): void {
     if(localStorage.getItem('token') === null)
-      this.document.location.href = '';
+    // this.document.location.href = '';
+      this.router.navigate([''])
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization' : 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
     this.id = localStorage.getItem('id');
-    this.GET_URL = this.GET_URL + this.id;
-    this.http.get(this.GET_URL, {responseType: 'text'}).subscribe(resp => {
-      const data: string[] = resp.split(' ');
-      this.loginSettings = data[8].slice(1, data[8].length - 4);
-      this.firstName = data[16].slice(1, data[16].length - 4);
-      this.lastName = data[20].slice(1, data[20].length - 4);
+    this.http.get(this.GET_URL, httpOptions).subscribe((resp: UserData) => {
+      this.firstName = resp.firstName;
+      this.lastName = resp.lastName;
+      this.loginSettings = resp.login;
     }, err => {
       console.log("error!");
+      this.router.navigate(['']);
     });
   }
   updateUser() {
-    this.document.location.href = '/updateUser';
+    this.router.navigate(['/updateUser']);
+    // this.document.location.href = '/updateUser';
   }
   changePassword() {
-    this.document.location.href = '/recover-request';
+    this.router.navigate(['/recover-request']);
+    // this.document.location.href = '/recover-request';
   }
+}
+
+class UserData {
+  constructor (public login: string, public firstName: string, public lastName: string) {}
 }

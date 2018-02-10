@@ -50,19 +50,21 @@ import {CabinetComponent} from './welcome/cabinet.component';
 import {SettingsComponent} from './settings/settings.component';
 import {UpdateUserComponent} from './settings/update.user.component';
 import {TaskListComponent} from './welcome/task_list_component';
-import {AdminHelloComponent} from "./admin/admin.hello.component";
-import {AddWordComponent} from "./admin/add.word.component";
-import {AdminAddNewGroupComponent} from "./admin/admin.add.new.group.component";
-import {DialogPasswordWarningComponent, RecoverPasswordComponent} from "./settings/recover.password.component";
-import {RequestRecoverPasswordComponent} from "./settings/request.recover.password.component";
-import {WelcomeSignUpComponent} from "./welcome/welcome.sign.up.component";
+import {AdminHelloComponent} from './admin/admin.hello.component';
+import {AddWordComponent} from './admin/add.word.component';
+import {AdminAddNewGroupComponent} from './admin/admin.add.new.group.component';
+import {DialogPasswordWarningComponent, RecoverPasswordComponent} from './settings/recover.password.component';
+import {RequestRecoverPasswordComponent} from './settings/request.recover.password.component';
+import {DialogWarningEmailComponent, WelcomeSignUpComponent} from './welcome/welcome.sign.up.component';
+import {ConfirmRegistrationComponent, DialogWarningComponent} from './registration/confirm.registration.component';
+import {LearnWritingComponent} from './tasks/learn.writing.component';
 
 
 const appRoutes: Routes = [
   { path: '', component: WelcomeComponent},
   { path: 'questions', component: CreatingQuestionComponent},
   { path: 'view', component: QuestionViewComponent },
-  { path: 'card', component: CardComponent},
+  { path: 'card/:id', component: CardComponent},
   { path: 'dictionary', component: DictionaryComponent},
   { path: 'cabinet', component: CabinetComponent},
   { path: 'signUp', component: WelcomeSignUpComponent},
@@ -73,6 +75,8 @@ const appRoutes: Routes = [
   { path: 'admin/addNewGroups', component: AdminAddNewGroupComponent},
   { path: 'recover-request', component: RequestRecoverPasswordComponent},
   { path: 'recover/:id', component: RecoverPasswordComponent},
+  { path: 'confirm-registration/:id', component: ConfirmRegistrationComponent},
+  { path: 'learn-writing/:id', component: LearnWritingComponent},
   { path: '**', redirectTo: '/'}
 ];
 
@@ -96,12 +100,18 @@ const appRoutes: Routes = [
     RecoverPasswordComponent,
     RequestRecoverPasswordComponent,
     DialogPasswordWarningComponent,
-    WelcomeSignUpComponent
+    WelcomeSignUpComponent,
+    ConfirmRegistrationComponent,
+    DialogWarningComponent,
+    DialogWarningEmailComponent,
+    LearnWritingComponent
   ],
   entryComponents: [
     DialogConfirmComponent,
     DictionaryComponent,
-    DialogPasswordWarningComponent
+    DialogPasswordWarningComponent,
+    DialogWarningComponent,
+    DialogWarningEmailComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule, RouterModule.forRoot(appRoutes),

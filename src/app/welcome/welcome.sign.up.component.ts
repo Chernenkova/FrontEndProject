@@ -4,6 +4,8 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
 import {DOCUMENT} from '@angular/common';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -22,7 +24,7 @@ import {DOCUMENT} from '@angular/common';
         <label for="email" style="margin-left: 13%">Login</label>
         <input type="email" class="form-control" id="email" style="width: 30%" placeholder="Please, enter login"
                [(ngModel)]="login" #email="ngModel"
-               required pattern="[a-zA-Z_]+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}">
+               required pattern="[a-z0-9A-Z_]+@[a-z0-9A-Z_]+?\\.[a-zA-Z]{2,3}">
       </div>
       <div class="form-group" style="margin-left: 41%">
         <label for="pass" style="margin-left: 12%">Password</label>
@@ -57,34 +59,73 @@ export class WelcomeSignUpComponent {
   error = false;
   loading = false;
   POST2_URL = 'http://localhost:8080/welcome';
-  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any) {}
-  signUp() {
-    this.loading = false;
-    const user = {'username': this.login, 'userPassword': this.password, 'userRepeatedPassword': this.passwordRepeat};
+  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any, private router: Router,
+              private activatedRoute: ActivatedRoute, public dialog: MatDialog) {}
+  // signUp() {
+  //   this.loading = false;
+  //   const user = {'username': this.login, 'userPassword': this.password, 'userRepeatedPassword': this.passwordRepeat};
+  //   if ((this.password === null) || (this.login === null) || (this.passwordRepeat === null) || (this.password !== this.passwordRepeat)) {
+  //     this.error = true;
+  //     return;
+  //   }
+  //   this.http.post(this.POST2_URL, user, {responseType: 'text'}).subscribe(resp => {
+  //     this.loading = true;
+  //   }, err => {
+  //     this.error = true;
+  //     this.loading = true;
+  //   });
+  //   const timerId = setInterval(function (object) {
+  //     console.log("hi");
+  //     if (object.loading === true) {
+  //       if (object.error === false) {
+  //         console.log("Everything is OK");
+  //         object.wantToSignIn();
+  //       }
+  //       clearInterval(timerId);
+  //     }
+  //   }, 500, this);
+  // }
+
+  signUp(): void {
     if ((this.password === null) || (this.login === null) || (this.passwordRepeat === null) || (this.password !== this.passwordRepeat)) {
       this.error = true;
       return;
     }
-    this.http.post(this.POST2_URL, user, {responseType: 'text'}).subscribe(resp => {
-      this.loading = true;
-    }, err => {
+    this.http.post(this.POST2_URL + '/register', {'login': this.login, 'password': this.password}).subscribe(resp => {
+      this.openDialog('На указанный E-mail отпралено письмо для подтверждения');
+      this.router.navigate(['']);
+    }, error2 => {
       this.error = true;
-      this.loading = true;
+      this.openDialog('Такой E-mail уже использован');
     });
-    const timerId = setInterval(function (object) {
-      console.log("hi");
-      if (object.loading === true) {
-        if (object.error === false) {
-          console.log("Everything is OK");
-          object.wantToSignIn();
-        }
-        clearInterval(timerId);
-      }
-    }, 500, this);
+  }
+
+  openDialog(message): void {
+    const dialogRef = this.dialog.open(DialogWarningEmailComponent, {data: {'message': message}});
+
+    dialogRef.afterClosed().subscribe();
+
   }
 }
 
 
 export class TokenWrapper {
   constructor(public token: string) {}
+}
+
+@Component({
+  selector: 'app-dialog-email-warning',
+  template: `<h1 mat-dialog-title>{{data.message}}</h1>
+  <div mat-dialog-content>
+    <button style="margin: auto" mat-button (click)="onNoClick()">Ok</button>
+  </div>`
+})
+export class DialogWarningEmailComponent {
+  constructor(
+    public dialogRef: MatDialogRef<DialogWarningEmailComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any  ) { }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
 }
