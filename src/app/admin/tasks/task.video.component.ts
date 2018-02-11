@@ -78,6 +78,7 @@ export class TaskVideoComponent implements OnInit {
 
   DOMAIN = 'http://localhost:8080';
   POST = '/questions-text/create-video';
+  PATH  = 'https://www.youtube.com/embed/';
 
   readyQuestions: Question[] = [];
 
@@ -114,7 +115,7 @@ export class TaskVideoComponent implements OnInit {
     for (let l = 0; l < this.readyQuestions.length; l++) {
       if (this.readyQuestions[l].answer === null) return;
     }
-    const t = new Task(this.link, this.readyQuestions, this.reward);
+    const t = new Task(this.PATH + this.link, this.readyQuestions, this.reward);
     console.log(JSON.stringify(t));
 
     let httpOptions = {};
@@ -131,6 +132,6 @@ class Question {
   constructor(public question: string, public answer: string = null, public possibleAnswers: string[]) {}
 }
 class Task {
-  constructor(public link: string, public questions: Question[], public reward: number) {
+  constructor(public text: string, public questions: Question[], public reward: number) {
   }
 }

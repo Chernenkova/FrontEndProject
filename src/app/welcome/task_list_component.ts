@@ -96,6 +96,15 @@ export class TaskListComponent implements OnInit {
     if (type === 'WRITING') {
       return 'Правописание';
     }
+    if (type === 'GRAMMAR') {
+      return 'Грамматика';
+    }
+    if (type === 'VIDEO') {
+      return 'Видео';
+    }
+    if (type === 'QUESTION') {
+      return 'Текст с вопросами';
+    }
   }
   getIcon(i) {
     if (this.taskList[i].type === 'CHOOSING') {
@@ -103,6 +112,15 @@ export class TaskListComponent implements OnInit {
     }
     if (this.taskList[i].type === 'WRITING') {
       return 'glyphicon glyphicon-pencil';
+    }
+    if (this.taskList[i].type === 'GRAMMAR') {
+      return 'fa fa-angellist';
+    }
+    if (this.taskList[i].type === 'VIDEO') {
+      return 'fa fa-angellist';
+    }
+    if (this.taskList[i].type === 'QUESTION') {
+      return 'fa fa-angellist';
     }
   }
   getLiClass(i) {
@@ -120,6 +138,16 @@ export class TaskListComponent implements OnInit {
     if (this.taskList[i].type === 'CHOOSING') {
       this.router.navigate(['/card/' + this.taskList[i].id]);
     }
+    if (this.taskList[i].type === 'CHOOSING') {
+      // this.router.navigate(['/card/' + this.taskList[i].id]);
+    }
+    if (this.taskList[i].type === 'CHOOSING') {
+      // this.router.navigate(['/card/' + this.taskList[i].id]);
+    }
+    if (this.taskList[i].type === 'CHOOSING') {
+      // this.router.navigate(['/card/' + this.taskList[i].id]);
+    }
+
   }
   reverseArray(): void {
     this.inverted = !this.inverted;
