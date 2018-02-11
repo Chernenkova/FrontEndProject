@@ -4,6 +4,7 @@
     <h2>Welcome, admin!</h2>
   </div>
   <div style="text-align:center">
+    <br>
   <button type="button" class="btn btn-outline-dark" (click)="wantToAddNewWords()">Add new words</button>
   </div>
   <br>
@@ -11,5 +12,13 @@
     <button type="button" class="btn btn-outline-dark" (click)="wantToAddNewGroups()">Choose words for new groups</button>
   </div>
   <br>
-  <app-creating-comp></app-creating-comp>
+  <div style="text-align:center">
+    <button type="button" class="btn btn-outline-dark" (click)="wantToAddNewTask()">Add new tasks</button>
+  </div>
+  <div *ngIf="want" style="text-align:center">
+    <br>
+    <button type="button" class="btn btn-dark" (click)="taskText()">Text</button>
+    <button type="button" class="btn btn-dark" (click)="taskVideo()">Video</button>
+    <button type="button" class="btn btn-dark" (click)="taskGrammar()">Grammar</button>
+  </div>
 </ul>

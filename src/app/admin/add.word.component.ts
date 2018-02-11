@@ -44,7 +44,7 @@ export class AddWordComponent implements OnInit {
   addWord() {
     console.log("add");
     if (this.word === null || this.translation === null) return;
-    this.basicTaskArray.push(new Card(this.word, this.translation));
+    this.basicTaskArray.push(new Card(this.word.toLowerCase().trim(), this.translation.toLowerCase().trim()));
     this.word = null;
     this.translation = null;
   }
