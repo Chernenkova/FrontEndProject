@@ -137,7 +137,7 @@ export class DictionaryComponent implements OnInit, AfterViewInit {
         headers: new HttpHeaders({'Authorization' : 'Bearer ' + localStorage.getItem('token')})
       };
     }
-    this.http.put(this.URL, new Card(this.word.trim(), this.translation.trim()), httpOptions).subscribe((data: Card[]) => {
+    this.http.put(this.URL, new Card(this.word.trim().toLowerCase(), this.translation.trim().toLowerCase()), httpOptions).subscribe((data: Card[]) => {
       this.dictionary = data.map(x => Object.assign({}, x));
       this.dataSource = new MatTableDataSource<Card>(this.dictionary);
       this.dataSource.paginator = this.paginator;
