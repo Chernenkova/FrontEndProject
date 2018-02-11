@@ -48,6 +48,8 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 
 export class CardComponent implements OnInit {
 
+
+  URL_COMPLETE = 'http://localhost:8080/task-progress/';
   request = 'http://localhost:8080/choosing-translation/task/';
   id;
 
@@ -86,6 +88,9 @@ export class CardComponent implements OnInit {
     this.indexArray = ++this.indexArray;
     this.selectedItem = null;
     this.rightResult = null;
+    if(this.indexArray === this.task.array.length){
+      this.completeTask();
+    }
   }
   prev(): void {
     if (this.indexArray === 0) {
@@ -121,14 +126,28 @@ export class CardComponent implements OnInit {
         headers: new HttpHeaders({'Authorization' : 'Bearer ' + localStorage.getItem('token')})
       };
     }
-    this.http.post(this.request + 'result', w, httpOptions).subscribe(
+    this.http.post(this.request + 'result/' + this.id, w, httpOptions).subscribe(
       (data: ResponseWrapper) => {
         this.word = data.toString();
         this.rightResult = data.translation;
         this.result = newValue === data.translation;
-        if (this.result) this.score++;
+        if (this.result) {
+          this.score++;
+        }
       }
     );
+  }
+  completeTask(): void {
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization' : 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.post(this.URL_COMPLETE + this.id, null, httpOptions).subscribe((rating: number) => {
+      localStorage.setItem('raiting', '' + rating);
+    });
+
   }
 }
 
