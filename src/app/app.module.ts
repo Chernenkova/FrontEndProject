@@ -50,18 +50,27 @@ import {CabinetComponent} from './welcome/cabinet.component';
 import {SettingsComponent} from './settings/settings.component';
 import {UpdateUserComponent} from './settings/update.user.component';
 import {TaskListComponent} from './welcome/task_list_component';
-import {AdminHelloComponent} from "./admin/admin.hello.component";
-import {AddWordComponent} from "./admin/add.word.component";
-import {AdminAddNewGroupComponent} from "./admin/admin.add.new.group.component";
-import {DialogPasswordWarningComponent, RecoverPasswordComponent} from "./settings/recover.password.component";
-import {RequestRecoverPasswordComponent} from "./settings/request.recover.password.component";
-import {WelcomeSignUpComponent} from "./welcome/welcome.sign.up.component";
+import {AdminHelloComponent} from './admin/admin.hello.component';
+import {AddWordComponent} from './admin/add.word.component';
+import {AdminAddNewGroupComponent} from './admin/admin.add.new.group.component';
+import {DialogPasswordWarningComponent, RecoverPasswordComponent} from './settings/recover.password.component';
+import {RequestRecoverPasswordComponent} from './settings/request.recover.password.component';
+import {WelcomeSignUpComponent} from './welcome/welcome.sign.up.component';
+import {TaskEngRusComponent} from './admin/tasks/task.Eng.Rus.component';
+import {Task1from4Component} from './admin/tasks/task.1from4.component';
+import {TaskTextComponent} from './admin/tasks/task.text.component';
+import {TaskRusEngComponent} from './admin/tasks/task.Rus.Eng.component';
+import {TaskGrammarComponent} from './admin/tasks/task.grammar.component';
+import {TaskVideoComponent} from './admin/tasks/task.video.component';
+import {VideoViewComponent} from './questions/video.view.component';
+import {SafePipe} from './questions/safe.pipe';
 
 
 const appRoutes: Routes = [
   { path: '', component: WelcomeComponent},
   { path: 'questions', component: CreatingQuestionComponent},
   { path: 'view', component: QuestionViewComponent },
+  { path: 'videoView/:id', component: VideoViewComponent },
   { path: 'card', component: CardComponent},
   { path: 'dictionary', component: DictionaryComponent},
   { path: 'cabinet', component: CabinetComponent},
@@ -71,6 +80,12 @@ const appRoutes: Routes = [
   { path: 'admin', component: AdminHelloComponent},
   { path: 'admin/addNewWords', component: AddWordComponent},
   { path: 'admin/addNewGroups', component: AdminAddNewGroupComponent},
+  { path: 'admin/addNewEngRus', component: TaskEngRusComponent},
+  { path: 'admin/addNewRusEng', component: TaskRusEngComponent},
+  { path: 'admin/addNewText', component: TaskTextComponent},
+  { path: 'admin/addNew1from4', component: Task1from4Component},
+  { path: 'admin/addNewVideo', component: TaskVideoComponent},
+  { path: 'admin/addNewGrammar', component: TaskGrammarComponent},
   { path: 'recover-request', component: RequestRecoverPasswordComponent},
   { path: 'recover/:id', component: RecoverPasswordComponent},
   { path: '**', redirectTo: '/'}
@@ -96,7 +111,15 @@ const appRoutes: Routes = [
     RecoverPasswordComponent,
     RequestRecoverPasswordComponent,
     DialogPasswordWarningComponent,
-    WelcomeSignUpComponent
+    WelcomeSignUpComponent,
+    TaskEngRusComponent,
+    TaskRusEngComponent,
+    Task1from4Component,
+    TaskTextComponent,
+    TaskVideoComponent,
+    TaskGrammarComponent,
+    VideoViewComponent,
+    SafePipe
   ],
   entryComponents: [
     DialogConfirmComponent,

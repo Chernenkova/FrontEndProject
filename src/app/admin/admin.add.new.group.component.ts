@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatTableDataSource} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
@@ -8,11 +8,18 @@ import {DOCUMENT} from '@angular/common';
 @Component({
   selector: 'app-cabinet',
   template: `
+    <div style="text-align:center">
+      <h1>Happy English</h1>
+      <h2>Adding new groups</h2>
+    </div>
     <div class="panel panel-default" style="max-width: 1000px; margin: auto">
       <!--delete this DIV ^^^^^^-->
       <div class="">
         <div class="example-container mat-elevation-z8">
-          <mat-table #table [dataSource]="dataSource">
+          <mat-form-field style="max-width: 500px; margin-left: 41%">
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+          </mat-form-field>
+          <mat-table #table [dataSource]="dataSource" matSort>
 
             <!-- Checkbox Column -->
             <ng-container matColumnDef="select">
@@ -31,12 +38,12 @@ import {DOCUMENT} from '@angular/common';
             </ng-container>
             <!-- Word Column -->
             <ng-container matColumnDef="word">
-              <mat-header-cell *matHeaderCellDef> Word </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Word </mat-header-cell>
               <mat-cell *matCellDef="let element"> {{element.word}} </mat-cell>
             </ng-container>
             <!-- Translation Column -->
             <ng-container matColumnDef="translation">
-              <mat-header-cell *matHeaderCellDef> Translation </mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header> Translation </mat-header-cell>
               <mat-cell *matCellDef="let element"> {{element.translation}} </mat-cell>
             </ng-container>
             <!--asd -->
@@ -77,6 +84,7 @@ export class AdminAddNewGroupComponent implements OnInit {
   dataSource;
   selection = new SelectionModel<Card>(true, []);
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
   constructor(private http: HttpClient, public dialog: MatDialog, @Inject(DOCUMENT) private document: any) {}
   ngOnInit(): void {
     if(localStorage.getItem('token') === null)
@@ -93,6 +101,7 @@ export class AdminAddNewGroupComponent implements OnInit {
       this.dictionary = data.map(x => Object.assign({}, x));
       this.dataSource = new MatTableDataSource<Card>(this.dictionary);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     }, error => {
       // TODO: redirect
       console.log('redirect');
@@ -113,6 +122,11 @@ export class AdminAddNewGroupComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.selection = new SelectionModel<Card>(true, []);
     });
+  }
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
   }
 
   openDialog(): void {
