@@ -10,16 +10,25 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
       <h2>Creating new video task</h2>
     </div>
     <br>
-    <div class="form-group" style="margin-left: 33%">
+    <div style="max-width: 800px; margin: auto; text-align:center">
+    <div class="form-group">
+      <h3>The name of a new task &nbsp;  </h3>
+      <input style="width: 20%" placeholder="Please, enter a name" [(ngModel)]="name">
+    </div>
+    <div class="form-group">
       <label>Link for your video: &nbsp;  </label>
       <input style="width: 40%" placeholder="Please, enter a part of the link from Youtube" [(ngModel)]="link">
     </div>
     <div style="text-align: center">
     Attention! You need to enter only this part of the link: <div><img src="../../../assets/link.jpg"/></div>
     </div>
-    <div class="form-group" style="margin-left: 33%">
+    <div class="form-group">
       <label>Reward for each question: &nbsp;  </label>
       <input style="width: 20%" placeholder="Please, enter a reward" [(ngModel)]="reward">
+    </div>
+    <div class="form-group">
+      <label>The minimum of raiting for access: &nbsp;  </label>
+      <input style="width: 20%" placeholder="Please, enter a raiting" [(ngModel)]="minCost">
     </div>
     <div style="max-width: 800px; margin: auto">
       <div style="text-align:center"><h3>Question editor:</h3></div>
@@ -38,7 +47,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
               <span class="w3-bar-item w3-button w3-white w3-left" (click)="removeFromArray(i)">x</span>
               <h5>{{answ}}</h5>
           </ul>
-          <div style="margin-left: 42%"><button type="button" class="btn btn-dark" (click)="addQuestion()">Add this question</button></div>
+          <div><button type="button" class="btn btn-dark" (click)="addQuestion()">Add this question</button></div>
         </div>
       </div>
       <div style="text-align:center"><h3>Questions:</h3></div>
@@ -62,7 +71,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
           </ul>
         </div>
       </div>
-      <div style="margin-left: 43%"><button type="button" class="btn btn-dark" (click)="submit()">Add this task</button></div>
+      <div><button type="button" class="btn btn-dark" (click)="submit()">Add this task</button></div>
+    </div>
     </div>
   `
 })
@@ -70,6 +80,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 export class TaskVideoComponent implements OnInit {
   link: string;
   reward: number;
+  minCost: number;
+  name: string;
   constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) {
   }
   question: string = null;
@@ -83,10 +95,20 @@ export class TaskVideoComponent implements OnInit {
   readyQuestions: Question[] = [];
 
   ngOnInit(): void {
-    if (localStorage.getItem('token') === null)
+    if (localStorage.getItem('token') === null) {
       this.document.location.href = '';
-    if (localStorage.getItem('id') !== '26')
-      this.document.location.href = '';
+    }
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.get('http://localhost:8080/welcome/isAdmin', httpOptions).subscribe((isAdmin: boolean) => {
+      if (!isAdmin) {
+        this.document.location.href = '/cabinet';
+      }
+    });
   }
   addToArray(): void {
     if (this.answer === null) return;
@@ -115,7 +137,7 @@ export class TaskVideoComponent implements OnInit {
     for (let l = 0; l < this.readyQuestions.length; l++) {
       if (this.readyQuestions[l].answer === null) return;
     }
-    const t = new Task(this.PATH + this.link, this.readyQuestions, this.reward);
+    const t = new Task(this.name, this.PATH + this.link, this.readyQuestions, this.reward, this.minCost, localStorage.getItem('id'));
     console.log(JSON.stringify(t));
 
     let httpOptions = {};
@@ -132,6 +154,7 @@ class Question {
   constructor(public question: string, public answer: string = null, public possibleAnswers: string[]) {}
 }
 class Task {
-  constructor(public text: string, public questions: Question[], public reward: number) {
+  constructor(public name: string, public text: string, public questions: Question[], public reward: number, public minCost: number,
+              private authorId: String) {
   }
 }

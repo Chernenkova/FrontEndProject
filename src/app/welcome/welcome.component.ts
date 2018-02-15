@@ -53,7 +53,7 @@ export class WelcomeComponent {
       localStorage.setItem('name', this.name);
       localStorage.setItem('raiting', this.raiting);
       this.loading = true;
-      if(this.id === '26')
+      if(this.http.get('/welcome/isAdmin'))
         this.document.location.href = '/admin';
       else this.document.location.href = '/cabinet';
     }, err => {

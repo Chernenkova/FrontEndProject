@@ -1,5 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-cabinet',
@@ -9,12 +10,23 @@ import {DOCUMENT} from '@angular/common';
 export class AdminHelloComponent implements OnInit {
   name: string;
   want = false;
-  constructor(@Inject(DOCUMENT) private document: any) {}
+  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any) {}
+
   ngOnInit(): void {
-    if(localStorage.getItem('token') === null)
+    if (localStorage.getItem('token') === null) {
       this.document.location.href = '';
-    if(localStorage.getItem('id') !== '26')
-      this.document.location.href = '';
+    }
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.get('http://localhost:8080/welcome/isAdmin', httpOptions).subscribe((isAdmin: boolean) => {
+      if (!isAdmin) {
+        this.document.location.href = '/cabinet';
+      }
+    });
   }
   wantToAddNewWords() {
     this.document.location.href = 'admin/addNewWords';
@@ -24,15 +36,6 @@ export class AdminHelloComponent implements OnInit {
   }
   wantToAddNewTask() {
     this.want = true;
-  }
-  taskEngRus() {
-    this.document.location.href = 'admin/addNewEngRus';
-  }
-  taskRusEng() {
-    this.document.location.href = 'admin/addNewRusEng';
-  }
-  task1from4() {
-    this.document.location.href = 'admin/addNew1from4';
   }
   taskText() {
     this.document.location.href = 'admin/addNewText';

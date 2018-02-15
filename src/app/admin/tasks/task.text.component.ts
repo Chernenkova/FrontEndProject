@@ -11,6 +11,10 @@ import {DOCUMENT} from '@angular/common';
       <h2>Welcome, admin!</h2>
     </div>
     <div style="max-width: 800px; margin: auto; text-align:center">
+      <div class="form-group">
+        <h3>The name of a new task &nbsp;  </h3>
+        <input style="width: 20%" placeholder="Please, enter a name" [(ngModel)]="name">
+      </div>
       <div class="panel panel-default">
         <h3>Type the text:</h3>
         <div style="padding: 10px">
@@ -22,6 +26,10 @@ import {DOCUMENT} from '@angular/common';
         <div class="form-group">
           <label>Reward for each question: &nbsp;  </label>
           <input style="width: 20%" placeholder="Please, enter a reward" [(ngModel)]="reward">
+        </div>
+        <div class="form-group">
+          <label>The minimum of raiting for access: &nbsp;  </label>
+          <input style="width: 20%" placeholder="Please, enter a raiting" [(ngModel)]="minCost">
         </div>
         <h3>Question editor:</h3>
         <div style="padding: 10px">
@@ -74,6 +82,8 @@ export class TaskTextComponent implements OnInit {
   constructor (private http: HttpClient, @Inject(DOCUMENT) private document: any) {}
   text: string = null;
   reward: number;
+  minCost: number;
+  name: string;
 
   question: string = null;
   answer: string = null;
@@ -84,10 +94,20 @@ export class TaskTextComponent implements OnInit {
 
   readyQuestions: Question[] = [];
   ngOnInit(): void {
-    if (localStorage.getItem('token') === null)
+    if (localStorage.getItem('token') === null) {
       this.document.location.href = '';
-    if (localStorage.getItem('id') !== '26')
-      this.document.location.href = '';
+    }
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.get('http://localhost:8080/welcome/isAdmin', httpOptions).subscribe((isAdmin: boolean) => {
+      if (!isAdmin) {
+        this.document.location.href = '/cabinet';
+      }
+    });
   }
   addToArray(): void {
     if (this.answer === null) return;
@@ -116,7 +136,7 @@ export class TaskTextComponent implements OnInit {
     for (let l = 0; l < this.readyQuestions.length; l++) {
       if (this.readyQuestions[l].answer === null) return;
     }
-    const t = new Task(this.text, this.readyQuestions, this.reward);
+    const t = new Task(this.name, this.text, this.readyQuestions, this.reward, this.minCost, localStorage.getItem('id'));
     console.log(JSON.stringify(t));
 
     let httpOptions = {};
@@ -135,5 +155,6 @@ class Question {
   constructor(public question: string, public answer: string = null, public possibleAnswers: string[]) {}
 }
 class Task {
-  constructor(public text: string, public questions: Question[], public reward: number) {}
+  constructor(public name: string, public text: string, public questions: Question[], public reward: number, public minCost: number,
+              private authorId: String) {}
 }

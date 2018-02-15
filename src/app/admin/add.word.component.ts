@@ -35,10 +35,20 @@ export class AddWordComponent implements OnInit {
   POST_URL = 'http://localhost:8080/cards';
   constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) {}
   ngOnInit(): void {
-    if(localStorage.getItem('token') === null)
+    if (localStorage.getItem('token') === null) {
       this.document.location.href = '';
-    if(localStorage.getItem('id') !== '26')
-      this.document.location.href = '';
+    }
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.get('http://localhost:8080/welcome/isAdmin', httpOptions).subscribe((isAdmin: boolean) => {
+      if (!isAdmin) {
+        this.document.location.href = '/cabinet';
+      }
+    });
   }
 
   addWord() {
