@@ -1,6 +1,7 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 
 
 @Component({
@@ -9,8 +10,13 @@ import {DOCUMENT} from '@angular/common';
     <div style="margin-left:0%">
       <div class="panel panel-default">
         <div class="panel-body">
-          <h3>Read the text and answer the questions.</h3>
-          {{task.text}}
+          <div *ngIf="TYPE === 'q'">
+            <h3>Read the text and answer the questions.</h3>
+            {{task.text}}
+          </div>
+          <div *ngIf="TYPE !== 'q'">
+            <h3>{{task.text}}</h3>
+          </div>
           <br>
           <br>
           <h3>Questions:</h3>
@@ -33,7 +39,7 @@ import {DOCUMENT} from '@angular/common';
           </div>
           <div *ngIf="checked">
             <h3>Your score is {{response.score}}/{{response.totalScore}}</h3>
-            <button type="button" class="btn btn-default"><< Back</button>
+            <button type="button" class="btn btn-default" (click)="toCabinet()"><< Back</button>
           </div>
           <button *ngIf="!checked" type="button" class="btn btn-default" (click)="check()" [disabled] = "checked">Check</button>
         </div>
@@ -46,19 +52,28 @@ export class QuestionViewComponent implements OnInit {
   @Input() id: number;
   URL_GET = 'http://localhost:8080/questions-text/task/';
   URL_POST = 'http://localhost:8080/questions-text/check/';
-
+  TYPE: string;
   task: Task;
   answers: Answers = new Answers();
   checked = false;
   request: Req = null;
   response: Resp = null;
 
-  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute,
+              private http: HttpClient, @Inject(DOCUMENT) private document: any) {
   }
   ngOnInit(): void {
-    this.id = 11;
-    if(localStorage.getItem('token') === null)
-      this.document.location.href = '';
+    this.activatedRoute.params.subscribe((params: Params) => {
+      const path = params['id'];
+      this.TYPE = path.substr(0, 1);
+
+      this.id = params['id'].substr(1);
+    });
+    if (localStorage.getItem('token') === null) {
+      // this.document.location.href = '';
+      this.router.navigate(['']);
+    }
+
     let httpOptions = {};
     if (localStorage.getItem('token') != null) {
       httpOptions = {
@@ -91,8 +106,11 @@ export class QuestionViewComponent implements OnInit {
     }
     this.http.post(this.URL_POST + this.id.toString(), r, httpOptions).subscribe((data: Resp) => {
       this.response = data;
+      this.checked = true;
+      // TODO
+      localStorage.setItem('raiting', '' + data.rating);
     });
-    this.checked = true;
+
   }
   ngGetClass(i, item) {
     if (this.response === null) {
@@ -116,6 +134,9 @@ export class QuestionViewComponent implements OnInit {
       return 'w3-red';
     }
   }
+  toCabinet() {
+    this.router.navigate(['/cabinet']);
+  }
 }
 class Answers {
   constructor(public answers: string[] = []) {}
@@ -133,5 +154,5 @@ class Question {
   constructor(public questionUUID: string, public question: string, public possibleAnswers: string[]) {}
 }
 class Resp {
-  constructor(public totalScore: number, public score: number, public answers: Req) {}
+  constructor(public totalScore: number, public score: number, public answers: Req, public rating: number) {}
 }

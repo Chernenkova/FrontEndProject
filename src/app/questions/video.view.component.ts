@@ -39,7 +39,8 @@ import {DomSanitizer} from '@angular/platform-browser';
           </div>
           <div *ngIf="checked" style="margin-left: 38%">
             <h3>Your score is {{response.score}}/{{response.totalScore}}</h3>
-            <button style="margin-left: 12%"type="button" class="btn btn-outline-dark"><< Back</button>
+            <button style="margin-left: 12%"type="button" class="btn btn-outline-dark"
+                    (click)="toCabinet()"><< Back</button>
           </div>
           <button  style="margin-left: 46%" *ngIf="!checked" type="button" class="btn btn-outline-dark"
                    (click)="check()" [disabled]="checked">Check</button>
@@ -103,9 +104,11 @@ export class VideoViewComponent implements OnInit {
       };
     }
     this.http.post(this.URL_POST + this.id.toString(), r, httpOptions).subscribe((data: Resp) => {
+      // TODO:
       this.response = data;
+      this.checked = true;
+      localStorage.setItem('raiting', '' + data.rating);
     });
-    this.checked = true;
   }
   ngGetClass(i, item) {
     if (this.response === null) {
@@ -129,6 +132,9 @@ export class VideoViewComponent implements OnInit {
       return 'w3-red';
     }
   }
+  toCabinet() {
+    this.router.navigate(['/cabinet']);
+  }
 }
 class Answers {
   constructor(public answers: string[] = []) {}
@@ -146,5 +152,5 @@ class Question {
   constructor(public questionUUID: string, public question: string, public possibleAnswers: string[]) {}
 }
 class Resp {
-  constructor(public totalScore: number, public score: number, public answers: Req) {}
+  constructor(public totalScore: number, public score: number, public answers: Req, public rating: number) {}
 }

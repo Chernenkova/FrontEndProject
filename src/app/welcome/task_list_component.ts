@@ -28,7 +28,8 @@ import {ActivatedRoute, Router} from '@angular/router';
           <li class="w3-bar w3-border" *ngIf="selected ==='all' || task.type === selected">
             <div [ngClass]="getLiClass(i)" >
               <span (click)="execute(i)" class="w3-bar-item w3-button w3-xlarge w3-right w3-teal">Выполнить</span>
-              <span class="w3-bar-item w3-white w3-xlarge w3-right">{{task.reward}} <span class="glyphicon glyphicon-education"></span>
+              <span *ngIf="task.reward!==0"
+                    class="w3-bar-item w3-white w3-xlarge w3-right">{{task.reward}} <span class="glyphicon glyphicon-education"></span>
               </span>
               <div class="w3-bar-item">
                 <span class="w3-large">{{task.name}}</span>
@@ -114,13 +115,13 @@ export class TaskListComponent implements OnInit {
       return 'glyphicon glyphicon-pencil';
     }
     if (this.taskList[i].type === 'GRAMMAR') {
-      return 'fa fa-angellist';
+      return 'fa fa-list-ul';
     }
     if (this.taskList[i].type === 'VIDEO') {
-      return 'fa fa-angellist';
+      return 'fa fa-film';
     }
     if (this.taskList[i].type === 'QUESTION') {
-      return 'fa fa-angellist';
+      return 'fa fa-question-circle';
     }
   }
   getLiClass(i) {
@@ -138,14 +139,15 @@ export class TaskListComponent implements OnInit {
     if (this.taskList[i].type === 'CHOOSING') {
       this.router.navigate(['/card/' + this.taskList[i].id]);
     }
-    if (this.taskList[i].type === 'CHOOSING') {
-      // this.router.navigate(['/card/' + this.taskList[i].id]);
+    if (this.taskList[i].type === 'GRAMMAR') {
+      this.router.navigate(['/view/g' + this.taskList[i].id]);
+
     }
-    if (this.taskList[i].type === 'CHOOSING') {
-      // this.router.navigate(['/card/' + this.taskList[i].id]);
+    if (this.taskList[i].type === 'QUESTION') {
+      this.router.navigate(['/view/q' + this.taskList[i].id]);
     }
-    if (this.taskList[i].type === 'CHOOSING') {
-      // this.router.navigate(['/card/' + this.taskList[i].id]);
+    if (this.taskList[i].type === 'VIDEO') {
+      this.router.navigate(['/videoView/' + this.taskList[i].id]);
     }
 
   }

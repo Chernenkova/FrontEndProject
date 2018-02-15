@@ -52,7 +52,7 @@ import {UpdateUserComponent} from './settings/update.user.component';
 import {TaskListComponent} from './welcome/task_list_component';
 import {AdminHelloComponent} from './admin/admin.hello.component';
 import {AddWordComponent} from './admin/add.word.component';
-import {AdminAddNewGroupComponent} from './admin/admin.add.new.group.component';
+import {AdminAddNewGroupComponent, DialogCreateTaskComponent} from './admin/admin.add.new.group.component';
 import {DialogPasswordWarningComponent, RecoverPasswordComponent} from './settings/recover.password.component';
 import {RequestRecoverPasswordComponent} from './settings/request.recover.password.component';
 import {DialogWarningEmailComponent, WelcomeSignUpComponent} from './welcome/welcome.sign.up.component';
@@ -70,7 +70,7 @@ import {SafePipe} from './questions/safe.pipe';
 const appRoutes: Routes = [
   { path: '', component: WelcomeComponent},
   { path: 'questions', component: CreatingQuestionComponent},
-  { path: 'view', component: QuestionViewComponent },
+  { path: 'view/:id', component: QuestionViewComponent },
   { path: 'card/:id', component: CardComponent},
   { path: 'videoView/:id', component: VideoViewComponent },
   { path: 'dictionary', component: DictionaryComponent},
@@ -126,14 +126,16 @@ const appRoutes: Routes = [
     TaskVideoComponent,
     TaskGrammarComponent,
     VideoViewComponent,
-    SafePipe
+    SafePipe,
+    DialogCreateTaskComponent
   ],
   entryComponents: [
     DialogConfirmComponent,
     DictionaryComponent,
     DialogPasswordWarningComponent,
     DialogWarningComponent,
-    DialogWarningEmailComponent
+    DialogWarningEmailComponent,
+    DialogCreateTaskComponent
   ],
   imports: [
     BrowserModule, FormsModule, HttpClientModule, RouterModule.forRoot(appRoutes),

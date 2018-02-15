@@ -8,13 +8,6 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 @Component({
   selector: 'app-card-comp',
   template: `
-    {{''+temp}}
-    <br>
-    this: {{word}}
-    <br>
-    {{translation}}
-    <br>
-    {{selectedItem}}
     <div class="panel panel-default my-panel w3-display-container"
          style="max-width: 1000px; margin: auto">
       <div class="panel-heading">
