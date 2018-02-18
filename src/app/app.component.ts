@@ -8,6 +8,8 @@ import {DOCUMENT} from '@angular/common';
     <div>
       <nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
         <div class="container-fluid">
+          <div class="navbar navbar-brand">
+          </div>
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header navbar-left">
             <div *ngIf="try(); else unset">
