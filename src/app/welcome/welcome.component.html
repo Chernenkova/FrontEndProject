@@ -6,7 +6,7 @@
   <ng-template #unset2>
     <div *ngIf="true;else unset">
       <div style="text-align:center">
-        <div style="margin-left: 4%"><img src="../../assets/123.png" width="350" height="175"/></div>
+        <div style="margin-left: 1%"><img src="../../assets/123.png"/></div>
         <h2>Welcome!</h2>
         <h3>Please, sign in:</h3>
       </div>
@@ -23,7 +23,7 @@
         <input type="password" class="form-control" id="pass" style="width: 30%" placeholder="Please, enter password" [(ngModel)]="password"
                required pattern="[0-9a-zA-Z]{6,}" (error)="123">
       </div>
-      <button type="submit" class="btn btn-success" (click)="signIn()" style="margin-left: 47.5%">Sign in</button>
+      <button type="submit" class="btn btn-outline-dark" (click)="signIn()" style="margin-left: 47.5%">Sign in</button>
     </div>
     <ng-template #unset>
       <div>
@@ -48,7 +48,7 @@
           <label for="pass"  style="margin-left: 9.5%">Repeat password</label>
           <input type="password" class="form-control" id="pass" style="width: 30%" placeholder="Please, repeat your password" [(ngModel)]="passwordRepeat" required pattern="[0-9a-zA-Z]{6,}">
         </div>
-        <button type="submit" class="btn btn-success" (click)="signUp()"  style="margin-left: 47.5%">Sign up</button>
+        <button type="submit" class="btn btn-outline-dark" (click)="signUp()"  style="margin-left: 47.5%">Sign up</button>
       </div>
     </ng-template>
   </ng-template>
