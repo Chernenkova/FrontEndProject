@@ -13,7 +13,7 @@ import {ActivatedRoute, Router} from '@angular/router';
   template: `
     <div>
       <div style="text-align:center">
-        <h1>Happy English</h1>
+        <div style="margin-left: 1%"><img src="../../assets/123.png"/></div>
         <h2>Welcome!</h2>
         <h3>Please, sign up:</h3>
       </div>
@@ -37,7 +37,7 @@ import {ActivatedRoute, Router} from '@angular/router';
                placeholder="Please, repeat your password" [(ngModel)]="passwordRepeat" required
                pattern="[0-9a-zA-Z]{6,}">
       </div>
-      <button type="submit" class="btn btn-success" (click)="signUp()" style="margin-left: 47.5%">Sign up</button>
+      <button type="submit" class="btn btn-outline-dark" (click)="signUp()" style="margin-left: 47.5%">Sign up</button>
     </div>
   `,
   styleUrls: ['../../styles.css'],
