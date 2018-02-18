@@ -1,6 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
+import {DialogWarningEmailComponent} from "../../welcome/welcome.sign.up.component";
+import {MatDialog} from "@angular/material";
 
 
 @Component ({
@@ -79,7 +81,7 @@ import {DOCUMENT} from '@angular/common';
 })
 
 export class TaskTextComponent implements OnInit {
-  constructor (private http: HttpClient, @Inject(DOCUMENT) private document: any) {}
+  constructor (private http: HttpClient, @Inject(DOCUMENT) private document: any, public dialog: MatDialog) {}
   text: string = null;
   reward: number;
   minCost: number;
@@ -146,8 +148,17 @@ export class TaskTextComponent implements OnInit {
       };
     }
     this.http.post(this.DOMAIN + this.POST, t, httpOptions).subscribe();
+    this.openDialog('Success');
+    this.document.location.href = '/admin';
+  }
+  openDialog(message): void {
+    const dialogRef = this.dialog.open(DialogWarningEmailComponent, {data: {'message': message}});
+
+    dialogRef.afterClosed().subscribe();
+
   }
 }
+
 
 
 

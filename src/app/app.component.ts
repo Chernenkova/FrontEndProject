@@ -12,7 +12,7 @@ import {DOCUMENT} from '@angular/common';
           <div class="navbar-header navbar-left">
             <div *ngIf="try(); else unset">
               <span class="navbar-brand" (click)="router.navigate(['/cabinet'])"><span class="glyphicon glyphicon-user">
-                Hello, {{userName.trim()}}!  {{raiting}}<span class="	glyphicon glyphicon-education"></span></span></span>
+                Hello, {{userName.trim()}}!&nbsp;&nbsp;&nbsp;{{raiting}} <span class="	glyphicon glyphicon-education"></span></span></span>
               <button type="button" class="btn btn-default" (click)="sett()"><span class="glyphicon glyphicon-cog"></span>Settings</button>
               <button type="button" class="btn btn-default" (click)="signOut()">Sign out</button>
             </div>

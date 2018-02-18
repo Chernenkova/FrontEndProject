@@ -1,6 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {DialogWarningEmailComponent} from "../../welcome/welcome.sign.up.component";
+import {MatDialog} from "@angular/material";
 
 @Component({
   selector: 'app-grammar-create',
@@ -74,7 +76,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 })
 
 export class TaskGrammarComponent implements OnInit {
-  constructor (private http: HttpClient, @Inject(DOCUMENT) private document: any) {}
+  constructor (private http: HttpClient, @Inject(DOCUMENT) private document: any, public dialog: MatDialog) {}
   text: string = null;
   reward: number;
   minCost: number;
@@ -142,6 +144,14 @@ export class TaskGrammarComponent implements OnInit {
       };
     }
     this.http.post(this.DOMAIN + this.POST, t, httpOptions).subscribe();
+    this.openDialog('Success');
+    this.document.location.href = '/admin';
+  }
+  openDialog(message): void {
+    const dialogRef = this.dialog.open(DialogWarningEmailComponent, {data: {'message': message}});
+
+    dialogRef.afterClosed().subscribe();
+
   }
 }
 

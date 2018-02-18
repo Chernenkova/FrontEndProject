@@ -7,7 +7,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 @Component({
   selector : 'app-question-component',
   template : `
-    <div style="margin-left:0%">
+    <div style="max-width: 800px; margin: auto">
       <div class="panel panel-default">
         <div class="panel-body">
           <div *ngIf="TYPE === 'q'">

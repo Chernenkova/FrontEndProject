@@ -1,6 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {MatDialog} from "@angular/material";
+import {DialogWarningEmailComponent} from "../../welcome/welcome.sign.up.component";
 
 @Component({
   selector: 'app-video-create',
@@ -82,7 +84,7 @@ export class TaskVideoComponent implements OnInit {
   reward: number;
   minCost: number;
   name: string;
-  constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) {
+  constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient, public dialog: MatDialog) {
   }
   question: string = null;
   answer: string = null;
@@ -147,6 +149,14 @@ export class TaskVideoComponent implements OnInit {
       };
     }
     this.http.post(this.DOMAIN + this.POST, t, httpOptions).subscribe();
+    this.openDialog('Success');
+    this.document.location.href = '/admin';
+  }
+  openDialog(message): void {
+    const dialogRef = this.dialog.open(DialogWarningEmailComponent, {data: {'message': message}});
+
+    dialogRef.afterClosed().subscribe();
+
   }
 }
 
