@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSort, MatTabl
 import {SelectionModel} from '@angular/cdk/collections';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
+import {DialogWarningEmailComponent} from '../welcome/welcome.sign.up.component';
 
 
 @Component({
@@ -130,6 +131,13 @@ export class AdminAddNewGroupComponent implements OnInit {
     this.dataSource.filter = filterValue;
   }
 
+  openDialogMessage(message): void {
+    const dialogRef = this.dialog.open(DialogWarningEmailComponent, {data: {'message': message}});
+
+    dialogRef.afterClosed().subscribe();
+
+  }
+
   openDialog(): void {
 
     const dialogRef = this.dialog.open(DialogCreateTaskComponent, {
@@ -138,7 +146,7 @@ export class AdminAddNewGroupComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((result: DataCreate) => {
       if (result.type === null || result.minrate === null || result.reward === null || result.name === null) {
-        alert('Введены не все поля, не получается создать задание');
+        this.openDialogMessage('Введены не все поля, не получается создать задание');
         return;
       } else {
         let httpOptions = {};
@@ -148,7 +156,11 @@ export class AdminAddNewGroupComponent implements OnInit {
           };
         }
         this.http.post(this.URL_CREATE, {'name': result.name, 'reward': result.reward, 'minrate': result.minrate, 'type': result.type,
-                        'array': this.selection.selected}, httpOptions).subscribe(result2 => {alert('Успешно!'); }, error2 => alert('ERROR'));
+                        'array': this.selection.selected}, httpOptions).subscribe(result2 => {
+                          this.openDialogMessage('Успешно');
+                          }, error2 => {
+                          this.openDialogMessage('Ошибка');
+        });
       }
 
     });
