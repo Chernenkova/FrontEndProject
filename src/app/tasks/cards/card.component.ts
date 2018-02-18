@@ -58,7 +58,8 @@ export class CardComponent implements OnInit {
   result: boolean;
   ngClassResult: string;
   score = 0;
-  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any, private router: Router, private activatedRoute: ActivatedRoute) {}
+  constructor(private http: HttpClient, @Inject(DOCUMENT) private document: any,
+              private router: Router, private activatedRoute: ActivatedRoute) {}
 
   ngOnInit(): void {
     if (localStorage.getItem('token') === null) {
