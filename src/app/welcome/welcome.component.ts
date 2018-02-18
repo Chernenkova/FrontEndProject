@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
@@ -53,9 +53,19 @@ export class WelcomeComponent {
       localStorage.setItem('name', this.name);
       localStorage.setItem('raiting', this.raiting);
       this.loading = true;
-      if(this.http.get('/welcome/isAdmin'))
-        this.document.location.href = '/admin';
-      else this.document.location.href = '/cabinet';
+      let httpOptions = {};
+      if (localStorage.getItem('token') != null) {
+        httpOptions = {
+          headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+        };
+      }
+      this.http.get('http://localhost:8080/welcome/isAdmin', httpOptions).subscribe((isAdmin: boolean) => {
+        if (!isAdmin) {
+          this.document.location.href = '/cabinet';
+        } else {
+          this.document.location.href = '/admin';
+        }
+      });
     }, err => {
       console.log("Error!!!");
       this.error = true;
