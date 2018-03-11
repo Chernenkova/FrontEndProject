@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
+import {DOCUMENT} from '@angular/common';
 
 
 @Component({
-  selector: 'app-tasklist-comp',
+  selector: 'app-showtasks-comp',
   template:
   `<div class="panel panel-default" style="max-width: 800px; margin: auto">
     <!--delete this div-->
@@ -16,7 +17,6 @@ import {ActivatedRoute, Router} from '@angular/router';
             <mat-option *ngFor="let type of types" value="{{type}}">{{getTextFromType(type)}}</mat-option>
           </mat-select>
         </mat-form-field>
-        <mat-slide-toggle [(ngModel)]="showAll">Показывать выполенные задания</mat-slide-toggle>
         <div class="w3-right" style="padding-right: 16px; padding-top: 16px" >
           <i *ngIf="!inverted" class="fa fa-arrow-down" (click)="reverseArray()"></i>
           <i *ngIf="inverted"  class="fa fa-arrow-up" (click)="reverseArray()"></i>
@@ -27,7 +27,8 @@ import {ActivatedRoute, Router} from '@angular/router';
         <span *ngIf="!(task.completed && !showAll)">
           <li class="w3-bar w3-border" *ngIf="selected ==='all' || task.type === selected">
             <div [ngClass]="getLiClass(i)" >
-              <span (click)="execute(i)" class="w3-bar-item w3-button w3-xlarge w3-right w3-teal">Выполнить</span>
+              <span (click)="delete(i)" class="w3-bar-item w3-button w3-xlarge w3-right w3-teal">Delete
+                <span class="glyphicon glyphicon-trash"></span></span>
               <span *ngIf="task.reward!==0"
                     class="w3-bar-item w3-white w3-xlarge w3-right">{{task.reward}} <span class="glyphicon glyphicon-education"></span>
               </span>
@@ -53,19 +54,35 @@ import {ActivatedRoute, Router} from '@angular/router';
 })
 
 
-export class TaskListComponent implements OnInit {
+export class ShowAllTasksComponent implements OnInit {
 
-  URL = 'http://localhost:8080/task-progress';
+  URL = 'http://localhost:8080/task-progress/all';
+  URL_DELETE = 'http://localhost:8080/questions-text/delete/';
 
   taskList: TaskInfo[] = [];
   types: string[] = [];
   selected = 'all';
 
-  showAll = false;
+  showAll = true;
   inverted = false;
-  constructor(private router: Router, private activatedRoute: ActivatedRoute, private http: HttpClient) {}
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private http: HttpClient,
+              @Inject(DOCUMENT) private document: any) {}
   ngOnInit(): void {
+    if (localStorage.getItem('token') === null) {
+      this.document.location.href = '';
+    }
     let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.get('http://localhost:8080/welcome/isAdmin', httpOptions).subscribe((isAdmin: boolean) => {
+      if (!isAdmin) {
+        this.document.location.href = '/cabinet';
+      }
+    });
+    httpOptions = {};
     if (localStorage.getItem('token') != null) {
       httpOptions = {
         headers: new HttpHeaders({'Authorization' : 'Bearer ' + localStorage.getItem('token')})
@@ -123,31 +140,20 @@ export class TaskListComponent implements OnInit {
     }
   }
   getLiClass(i) {
-    if (this.taskList[i].completed === true) {
-      return 'completed';
-    }
     return '';
   }
 
-  execute(i): void {
-    // TODO:
-    if (this.taskList[i].type === 'WRITING') {
-      this.router.navigate(['/learn-writing/' + this.taskList[i].id]);
+  delete(i): void {
+    console.log(this.URL_DELETE + this.taskList[i].id.toString());
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization' : 'Bearer ' + localStorage.getItem('token')})
+      };
     }
-    if (this.taskList[i].type === 'CHOOSING') {
-      this.router.navigate(['/card/' + this.taskList[i].id]);
-    }
-    if (this.taskList[i].type === 'GRAMMAR') {
-      this.router.navigate(['/view/g' + this.taskList[i].id]);
-
-    }
-    if (this.taskList[i].type === 'QUESTION') {
-      this.router.navigate(['/view/q' + this.taskList[i].id]);
-    }
-    if (this.taskList[i].type === 'VIDEO') {
-      this.router.navigate(['/videoView/' + this.taskList[i].id]);
-    }
-
+    this.http.delete(this.URL_DELETE + this.taskList[i].id, httpOptions).subscribe(data => {
+      this.document.location.href = 'admin/showAllTasks';
+    });
   }
   reverseArray(): void {
     this.inverted = !this.inverted;

@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {Routes, RouterModule} from '@angular/router';
 
-import { AppComponent } from './app.component';
+import {AppComponent } from './app.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {CardComponent} from './tasks/cards/card.component';
 import {CreatingComponent} from './creatingtasks/creating.component';
@@ -63,6 +63,7 @@ import {TaskGrammarComponent} from './admin/tasks/task.grammar.component';
 import {TaskVideoComponent} from './admin/tasks/task.video.component';
 import {VideoViewComponent} from './questions/video.view.component';
 import {SafePipe} from './questions/safe.pipe';
+import {ShowAllTasksComponent} from './admin/show.all.tasks.component';
 
 const appRoutes: Routes = [
   { path: '', component: WelcomeComponent},
@@ -81,6 +82,7 @@ const appRoutes: Routes = [
   { path: 'admin/addNewText', component: TaskTextComponent},
   { path: 'admin/addNewVideo', component: TaskVideoComponent},
   { path: 'admin/addNewGrammar', component: TaskGrammarComponent},
+  { path: 'admin/showAllTasks', component: ShowAllTasksComponent},
   { path: 'recover-request', component: RequestRecoverPasswordComponent},
   { path: 'recover/:id', component: RecoverPasswordComponent},
   { path: 'confirm-registration/:id', component: ConfirmRegistrationComponent},
@@ -118,7 +120,8 @@ const appRoutes: Routes = [
     TaskGrammarComponent,
     VideoViewComponent,
     SafePipe,
-    DialogCreateTaskComponent
+    DialogCreateTaskComponent,
+    ShowAllTasksComponent
   ],
   entryComponents: [
     DialogConfirmComponent,

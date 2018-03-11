@@ -43,7 +43,6 @@
   --font-family-sans-serif: "Neucha", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-family-monospace: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
-
 @media print {
   *,
   *::before,
@@ -135,7 +134,10 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff;
+  background-size: 1370px 620px;
+  background-image: url(assets/ph.jpg);
+  background-repeat: no-repeat;
+
 }
 
 [tabindex="-1"]:focus {

@@ -31,7 +31,6 @@ export class AddWordComponent implements OnInit {
   word: string = null;
   translation: string = null;
   basicTaskArray: Card[] = [];
-  BASIC_TYPE = '/create/basic';
   POST_URL = 'http://localhost:8080/cards';
   constructor(@Inject(DOCUMENT) private document: any, private http: HttpClient) {}
   ngOnInit(): void {

@@ -91,6 +91,7 @@ import {Router} from '@angular/router';
   ]
 })
 
+
 export class DictionaryComponent implements OnInit, AfterViewInit {
   URL = 'http://localhost:8080/dictionary';
 
@@ -112,7 +113,7 @@ export class DictionaryComponent implements OnInit, AfterViewInit {
   }
   ngOnInit(): void {
     if(localStorage.getItem('token') === null)
-      // this.document.location.href = '';
+    // this.document.location.href = '';
       this.router.navigate(['']);
     let httpOptions = {};
     if (localStorage.getItem('token') != null) {
