@@ -1,5 +1,8 @@
 import {AfterViewInit, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {
+  MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort,
+  SortDirection
+} from '@angular/material';
 import {SelectionModel} from '@angular/cdk/collections';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {DOCUMENT} from '@angular/common';
@@ -20,7 +23,7 @@ import {DialogWarningEmailComponent} from '../welcome/welcome.sign.up.component'
           <mat-form-field style="max-width: 500px; margin-left: 41%">
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
           </mat-form-field>
-          <mat-table #table [dataSource]="dataSource" matSort>
+          <mat-table #table [dataSource]="dataSource" matSort (matSortChange)="sorting($event)">
 
             <!-- Checkbox Column -->
             <ng-container matColumnDef="select">
@@ -60,17 +63,19 @@ import {DialogWarningEmailComponent} from '../welcome/welcome.sign.up.component'
             </div>
             <mat-paginator #paginator class="w3-col l6 m6"
                            [pageSize]="10"
-                           [pageSizeOptions]="[1, 10, 20, 50]">
+                           [pageSizeOptions]="[1, 10, 20, 50]"
+                            (page)="paging($event)" >
             </mat-paginator>
           </div>
         </div>
       </div>
     </div>
+    {{globalSelected.selected.length}}
   `
 })
 
 export class AdminAddNewGroupComponent implements OnInit {
-  URL = 'http://localhost:8080/cards';
+  URL = 'http://localhost:8080/cards/filtered';
   URL_CREATE = 'http://localhost:8080/choosing-translation/create';
   word: string = null;
   translation: string = null;
@@ -81,8 +86,12 @@ export class AdminAddNewGroupComponent implements OnInit {
   displayedColumns = ['select', 'word', 'translation'];
   dataSource;
   selection = new SelectionModel<Card>(true, []);
+  globalSelected = new SelectionModel<Card>(true, []);
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+
+  filter = '';
+
   constructor(private http: HttpClient, public dialog: MatDialog, @Inject(DOCUMENT) private document: any) {}
   ngOnInit(): void {
     if (localStorage.getItem('token') === null) {
@@ -99,11 +108,13 @@ export class AdminAddNewGroupComponent implements OnInit {
         this.document.location.href = '/cabinet';
       }
     });
-    this.http.get(this.URL, httpOptions).subscribe((data: Card[]) => {
-      this.dictionary = data.map(x => Object.assign({}, x));
+    this.http.get(this.URL + '/?page=0&size=10&direction=ASC&active=word&filter=', httpOptions).subscribe((data: Page) => {
+      this.dictionary = data.content.map(x => Object.assign({}, x));
       this.dataSource = new MatTableDataSource<Card>(this.dictionary);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.paginator.length = data.totalElements;
+      this.sort.direction = 'asc';
+      this.sort.active = 'word';
+      // this.dataSource.sort = this.sort;
     }, error => {
       // TODO: redirect
       console.log('redirect');
@@ -126,9 +137,11 @@ export class AdminAddNewGroupComponent implements OnInit {
     });
   }
   applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
-    this.dataSource.filter = filterValue;
+    // filterValue = filterValue.trim(); // Remove whitespace
+    // filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    // this.dataSource.filter = filterValue;
+    this.filter = filterValue;
+    this.loadData();
   }
 
   openDialogMessage(message): void {
@@ -180,6 +193,40 @@ export class AdminAddNewGroupComponent implements OnInit {
       this.dataSource.data.forEach(row => this.selection.select(row));
   }
 
+  paging(event: PageEvent) {
+    console.log(JSON.stringify(event));
+    this.loadData();
+  }
+
+  sorting(event: Sort) {
+    this.sort.direction = event.direction;
+    this.sort.active = event.active;
+    this.loadData();
+  }
+
+
+
+  loadData () {
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.get(this.URL +
+      '/?page=' + this.paginator.pageIndex +
+      '&size=' + this.paginator.pageSize +
+      '&direction=' + this.sort.direction +
+      '&active=' + this.sort.active +
+      '&filter=' + this.filter, httpOptions).subscribe((data: Page) => {
+      this.dictionary = data.content.map(x => Object.assign({}, x));
+      this.dataSource = new MatTableDataSource<Card>(this.dictionary);
+      this.selection.selected.forEach(x => this.globalSelected.select(x));
+      console.log(JSON.stringify(this.dictionary.filter((x: Card) => {this.globalSelected.isSelected(x);} )));
+      this.selection = new SelectionModel<Card>(true, null);
+
+    });
+  }
 }
 
 export class Card {
@@ -232,4 +279,17 @@ export class DialogCreateTaskComponent {
 class DataCreate {
   constructor(public name: string, public reward: number, public minrate: number, public type: string) {
   }
+}
+
+
+class Page {
+  constructor(public content: Card[],
+              public last: boolean,
+              public totalPages: number,
+              public totalElements: number,
+              public size: number,
+              public number: number,
+              public first: boolean,
+              public sort: any,
+              public numberOfElements: number) {}
 }
