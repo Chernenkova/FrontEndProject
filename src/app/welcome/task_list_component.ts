@@ -73,8 +73,6 @@ export class TaskListComponent implements OnInit {
     }
     this.http.get(this.URL, httpOptions).subscribe((data: TaskInfo[]) => {
       this.taskList = data;
-
-
       const set = new Set();
       for (let j = 0; j < data.length; j++) {
         set.add(data[j].type);

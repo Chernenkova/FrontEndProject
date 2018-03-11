@@ -75,8 +75,20 @@ export class CreatingQuestionComponent implements OnInit {
 
   readyQuestions: Question[] = [];
   ngOnInit(): void {
-    if(localStorage.getItem('token') === null)
+    if (localStorage.getItem('token') === null) {
       this.document.location.href = '';
+    }
+    let httpOptions = {};
+    if (localStorage.getItem('token') != null) {
+      httpOptions = {
+        headers: new HttpHeaders({'Authorization': 'Bearer ' + localStorage.getItem('token')})
+      };
+    }
+    this.http.get('http://localhost:8080/welcome/isAdmin', httpOptions).subscribe((isAdmin: boolean) => {
+      if (!isAdmin) {
+        this.document.location.href = '/cabinet';
+      }
+    });
   }
   addToArray(): void {
     if (this.answer === null) return;

@@ -34,6 +34,9 @@ export class AdminHelloComponent implements OnInit {
   wantToAddNewGroups() {
     this.document.location.href = 'admin/addNewGroups';
   }
+  wantToSeeAllTasks() {
+    this.document.location.href = 'admin/showAllTasks';
+  }
   wantToAddNewTask() {
     this.want = true;
   }
